@@ -15,16 +15,43 @@ app.post("/", async (req, res) => {
     const text = message.text;
 
     if (text === "/start") {
-      await sendMessage(chatId, "🔥 Tyro Ex Bot is now working!");
+      await sendMainMenu(chatId);
     }
 
-    if (text === "/menu") {
-      await sendMessage(chatId, "📊 Main Menu\n/products\n/wallet\n/orders");
+    if (text === "💰 Wallet") {
+      await sendMessage(chatId, "Your wallet is empty ₹0");
+    }
+
+    if (text === "📊 Orders") {
+      await sendMessage(chatId, "No active orders.");
+    }
+
+    if (text === "🛍 Products") {
+      await sendMessage(chatId, "Available Plans:\nSilver\nGold\nPlatinum\nDiamond");
     }
   }
 
   res.sendStatus(200);
 });
+
+async function sendMainMenu(chatId) {
+  await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      chat_id: chatId,
+      text: "📊 Main Menu",
+      reply_markup: {
+        keyboard: [
+          ["🛍 Products"],
+          ["💰 Wallet"],
+          ["📊 Orders"]
+        ],
+        resize_keyboard: true
+      }
+    })
+  });
+}
 
 async function sendMessage(chatId, text) {
   await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
