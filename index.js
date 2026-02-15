@@ -20,6 +20,49 @@ app.post("/", async (req, res) => {
     const text = message.text;
 
     if (text === "/start") {
+      else if (text === "📊 Dashboard") {
+  await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      chat_id: chatId,
+      text: "📊 Dashboard\n\n💰 Balance: ₹0\n📦 Active Orders: 0\n💵 Total Profit: ₹0"
+    })
+  });
+}
+
+else if (text === "💰 Wallet") {
+  await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      chat_id: chatId,
+      text: "💰 Wallet\n\nAvailable Balance: ₹0"
+    })
+  });
+}
+
+else if (text === "🛍 Products") {
+  await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      chat_id: chatId,
+      text: "🛍 Products:\n\n1️⃣ Silver Plan\n2️⃣ Gold Plan\n3️⃣ Platinum Plan\n4️⃣ Diamond Plan"
+    })
+  });
+}
+
+else if (text === "📦 Orders") {
+  await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      chat_id: chatId,
+      text: "📦 You have no active orders."
+    })
+  });
+}
       await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
