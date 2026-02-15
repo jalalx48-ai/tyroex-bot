@@ -4,71 +4,67 @@ const fetch = require("node-fetch");
 const app = express();
 app.use(express.json());
 
-const TOKEN = "8533735159:AAEWVlLZWx1y2pB4LUxiylidiAX5WGB5s7I";
+const TOKEN = process.env.BOT_TOKEN;
 const PORT = process.env.PORT || 3000;
+
+app.get("/", (req, res) => {
+  res.send("🔥 Tyro Ex Bot is running!");
+});
 
 app.post("/", async (req, res) => {
   const message = req.body.message;
 
-  if (message) {
-    const chatId = message.chat.id;
-    const text = message.text;
+  if (!message) {
+    return res.sendStatus(200);
+  }
 
-    if (text === "/start") {
-  await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      chat_id: chatId,
-      text: "🔥 Welcome to Tyro Ex Bot\n\nChoose an option:",
-      reply_markup: {
-        keyboard: [
-          ["📊 Dashboard"],
-          ["🛍 Products", "💰 Wallet"],
-          ["📈 Orders"]
-        ],
-        resize_keyboard: true
-      }
-    })
-  });
-  }") {
-      await sendMainMenu(chatId);
-    }
+  const chatId = message.chat.id;
+  const text = message.text;
 
-    if (text === "💰 Wallet") {
-      await sendMessage(chatId, "Your wallet is empty ₹0");
-    }
+  // START COMMAND
+  if (text === "/start") {
+    await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text: "🔥 Welcome to Tyro Ex Bot\n\nChoose an option:",
+        reply_markup: {
+          keyboard: [
+            ["📊 Dashboard"],
+            ["🛍 Products", "💰 Wallet"],
+            ["📈 Orders"]
+          ],
+          resize_keyboard: true
+        }
+      })
+    });
+  }
 
-    if (text === "📊 Orders") {
-      await sendMessage(chatId, "No active orders.");
-    }
+  // DASHBOARD
+  else if (text === "📊 Dashboard") {
+    await sendMessage(chatId, "📊 Dashboard\n\nBalance: ₹0\nActive Orders: 0");
+  }
 
-    if (text === "🛍 Products") {
-      await sendMessage(chatId, "Available Plans:\nSilver\nGold\nPlatinum\nDiamond");
-    }
+  // WALLET
+  else if (text === "💰 Wallet") {
+    await sendMessage(chatId, "💰 Wallet\n\nAvailable Balance: ₹0");
+  }
+
+  // PRODUCTS
+  else if (text === "🛍 Products") {
+    await sendMessage(chatId,
+      "🛍 Products:\n\n1️⃣ Silver Plan\n2️⃣ Gold Plan\n3️⃣ Platinum Plan\n4️⃣ Diamond Plan"
+    );
+  }
+
+  // ORDERS
+  else if (text === "📈 Orders") {
+    await sendMessage(chatId, "📈 Your Orders\n\nNo active orders.");
   }
 
   res.sendStatus(200);
 });
-
-async function sendMainMenu(chatId) {
-  await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      chat_id: chatId,
-      text: "📊 Main Menu",
-      reply_markup: {
-        keyboard: [
-          ["🛍 Products"],
-          ["💰 Wallet"],
-          ["📊 Orders"]
-        ],
-        resize_keyboard: true
-      }
-    })
-  });
-}
 
 async function sendMessage(chatId, text) {
   await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
@@ -82,5 +78,5 @@ async function sendMessage(chatId, text) {
 }
 
 app.listen(PORT, () => {
-  console.log("Server running...");
+  console.log(`Server running on port ${PORT}`);
 });
